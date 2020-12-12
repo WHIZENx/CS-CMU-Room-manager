@@ -1,3 +1,3 @@
-# csmanager
+# CS-CMU Room manager
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/csmanager)
+[View Website](https://csmanager.stackblitz.io)
