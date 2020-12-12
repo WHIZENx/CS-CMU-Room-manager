@@ -1,0 +1,299 @@
+<div class="container">
+  <div>
+    <button
+      class="btn btn-secondary"
+      style="margin-right: 10px; margin-bottom: 10px;"
+      (click)="changeBook()"
+    >
+      รายละเอียดห้องต่างๆ
+    </button>
+    <button
+      class="btn btn-secondary"
+      style="margin-bottom: 10px;"
+      (click)="changePermis()"
+    >
+      {{book_str}}
+    </button>
+    <br />
+  </div>
+  <div *ngIf="booking_con">
+    <div *ngIf="isStaff">
+      <button
+        class="btn btn-success"
+        data-toggle="modal"
+        data-target="#addModal"
+      >
+        เพิ่มห้อง
+      </button>
+    </div>
+    <div class="card-columns">
+      <div class="card" *ngFor="let r of room;" style="margin:10px;">
+        <div
+          style="line-height: 150px; background: #ddd; cursor: pointer; text-align: center;"
+          (click)="seeroom(r.roomname)"
+          data-toggle="modal"
+          data-target="#roomModal"
+        >
+          <b>{{r.roomname}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="permission" class="container">
+  <input
+    id="datepick"
+    type="date"
+    min="{{todate | date:'yyyy-MM-dd'}}"
+    value="{{todate | date:'yyyy-MM-dd'}}"
+  />
+  <button class="btn btn-info" (click)="showTable()" style="margin-left: 10px;">
+    ค้นหา
+  </button>
+  <div *ngIf="table">
+    {{room_today}}
+    <div class="card-columns">
+      <div class="card" *ngFor="let r of room;" style="margin:10px;">
+        <div
+          id="{{r.roomname}}"
+          style="line-height: 150px; cursor: pointer; text-align: center;"
+          (click)="selectRoom(r.roomname)"
+          data-toggle="modal"
+          data-target="#editDateModal"
+        >
+          <b>{{r.roomname}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="editDateModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          ห้อง {{room_name}}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{detail_room}} {{date_show}}</p>
+        <table style="width:100%">
+          <tr>
+            <th id="0" (click)="addbooktime(0)">08:00-09:00</th>
+            <th id="1" (click)="addbooktime(1)">09:00-10:00</th>
+            <th id="2" (click)="addbooktime(2)">10:00-11:00</th>
+            <th id="3" (click)="addbooktime(3)">11:00-12:00</th>
+            <th id="4" (click)="addbooktime(4)">12:00-13:00</th>
+            <th id="5" (click)="addbooktime(5)">13:00-14:00</th>
+            <th id="6" (click)="addbooktime(6)">14:00-15:00</th>
+            <th id="7" (click)="addbooktime(7)">15:00-16:00</th>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          ปิด
+        </button>
+        <div *ngIf="isStaff">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="booking_db(room_name)"
+            data-dismiss="modal"
+          >
+            จอง
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">ระบบเพิ่มห้อง</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">ชื่อห้อง</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Room name"
+            aria-label="Condition"
+            aria-describedby="basic-addon1"
+            [(ngModel)]="roomname"
+          />
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">เงื่อนไข</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Condition"
+            aria-label="Condition"
+            aria-describedby="basic-addon1"
+            [(ngModel)]="condition"
+          />
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">ความจุ</span>
+          </div>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Capacity"
+            aria-label="Capacity"
+            aria-describedby="basic-addon1"
+            [(ngModel)]="number"
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            ปิด
+          </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="add()"
+            data-dismiss="modal"
+          >
+            เพิ่ม
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="roomModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle2"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle2">
+          รายละเอียดห้อง {{room_name}}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!edit_room">
+          <p>เงื่อนไขของห้อง: {{room_condition}}</p>
+          <p>ความจุของห้อง: {{room_number}}</p>
+        </div>
+        <div *ngIf="edit_room">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1"
+                >เงื่อนไขการใช้ห้อง</span
+              >
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Condition"
+              aria-label="Condition"
+              aria-describedby="basic-addon1"
+              [(ngModel)]="room_condition_2"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">ความจุห้อง</span>
+            </div>
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Capacity"
+              aria-label="Capacity"
+              aria-describedby="basic-addon1"
+              [(ngModel)]="room_number_2"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          ปิด
+        </button>
+        <div *ngIf="isStaff">
+          <div *ngIf="!edit_room">
+            <button
+              type="button"
+              class="btn btn-warning"
+              style="color: white;"
+              (click)="editroom()"
+            >
+              แก้ไข
+            </button>
+          </div>
+          <div *ngIf="edit_room">
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="edit_suc()"
+              data-dismiss="modal"
+            >
+              บันทึก
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
