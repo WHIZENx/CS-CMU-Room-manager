@@ -1,0 +1,12 @@
+th {
+  text-align: center;
+  border: 1px solid gray;
+  padding: 8px;
+  line-height: 40px;
+  background: #78e08f;
+  cursor: default;
+}
+
+.modal-lg {
+  max-width: 80% !important;
+}

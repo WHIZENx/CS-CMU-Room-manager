@@ -1,0 +1,13 @@
+<nav class="navbar navbar-dark bg-dark">
+	<a class="navbar-brand" routerLink="">
+		<img style="widrh: 40px; height: 40px;" src="https://www.img.in.th/images/feb4539743859619ba2fbcae6fd640df.png">
+		CS CMU
+	</a>
+		<div *ngIf="username != undefined && username != 'null'">
+			<a style="color: white; margin-right: 10px;"><b>{{username}}</b></a>
+			<button class="btn btn-danger" (click)="logout()">Logout</button>
+		</div>
+</nav>
+<div style="margin-top: 10px;">
+	<router-outlet></router-outlet>
+</div>
